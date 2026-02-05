@@ -18,9 +18,16 @@ public class UrlService {
     }
 
     public String getOriginalUrl(String shortUrl) throws Exception {
-        Optional<Url> url = urlRepository.findByShortUrl(shortUrl);
-        if (url.isEmpty()) throw new Exception("Resource not found");
-        return url.get().getOriginalUrl();
+        Optional<Url> urlOptional = urlRepository.findByShortUrl(shortUrl);
+        if (urlOptional.isEmpty()) throw new Exception("Resource not found");
+        Url url = urlOptional.get();
+
+        if (LocalDateTime.now().isAfter(url.getExpiresAt())) {
+            urlRepository.delete(url);
+            throw new Exception("Resource expired");
+
+        }
+        return urlOptional.get().getOriginalUrl();
 
     }
 
