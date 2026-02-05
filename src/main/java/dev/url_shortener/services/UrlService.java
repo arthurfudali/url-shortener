@@ -13,8 +13,8 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
 
-    public UrlService(UrlRepository urlRepository, UrlRepository urlRepository1) {
-        this.urlRepository = urlRepository1;
+    public UrlService(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
     }
 
     public String getOriginalUrl(String shortUrl) throws Exception {
