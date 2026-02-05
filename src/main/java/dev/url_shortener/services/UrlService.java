@@ -6,6 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UrlService {
@@ -14,6 +15,13 @@ public class UrlService {
 
     public UrlService(UrlRepository urlRepository, UrlRepository urlRepository1) {
         this.urlRepository = urlRepository1;
+    }
+
+    public String getOriginalUrl(String shortUrl) throws Exception {
+        Optional<Url> url = urlRepository.findByShortUrl(shortUrl);
+        if (url.isEmpty()) throw new Exception("Resource not found");
+        return url.get().getOriginalUrl();
+
     }
 
     public Url createShortUrl(String originalUrl) {
