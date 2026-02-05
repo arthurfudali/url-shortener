@@ -35,6 +35,6 @@ public class UrlService {
     }
 
     private String generateShortUrl(String url) {
-        return RandomStringUtils.insecure().nextAlphabetic(5, 11);
+        return RandomStringUtils.insecure().nextAlphanumeric(5, 11);
     }
 }
