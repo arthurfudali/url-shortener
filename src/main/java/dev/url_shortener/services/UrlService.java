@@ -3,10 +3,11 @@ package dev.url_shortener.services;
 import dev.url_shortener.entities.Url;
 import dev.url_shortener.repositories.UrlRepository;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class UrlService {
@@ -17,17 +18,17 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-    public String getOriginalUrl(String shortUrl) throws Exception {
-        Optional<Url> urlOptional = urlRepository.findByShortUrl(shortUrl);
-        if (urlOptional.isEmpty()) throw new Exception("Resource not found");
-        Url url = urlOptional.get();
+    public String getOriginalUrl(String shortUrl) throws ResponseStatusException {
+
+        Url url = urlRepository.findByShortUrl(shortUrl)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         if (LocalDateTime.now().isAfter(url.getExpiresAt())) {
             urlRepository.delete(url);
-            throw new Exception("Resource expired");
+            throw new ResponseStatusException(HttpStatus.GONE, "Resource expired");
 
         }
-        return urlOptional.get().getOriginalUrl();
+        return url.getOriginalUrl();
 
     }
 
