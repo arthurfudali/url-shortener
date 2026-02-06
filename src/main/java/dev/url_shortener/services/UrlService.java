@@ -35,14 +35,14 @@ public class UrlService {
     public Url createShortUrl(String originalUrl) {
         Url url = new Url();
         url.setOriginalUrl(originalUrl);
-        url.setShortUrl(generateShortUrl(originalUrl));
+        url.setShortUrl(generateShortUrl());
         url.setViews(0);
         url.setExpiresAt(LocalDateTime.now().plusDays(1));
         urlRepository.save(url);
         return url;
     }
 
-    private String generateShortUrl(String url) {
+    private String generateShortUrl() {
         return RandomStringUtils.insecure().nextAlphanumeric(5, 11);
     }
 }

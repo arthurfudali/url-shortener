@@ -1,5 +1,6 @@
 package dev.url_shortener.controllers;
 
+import dev.url_shortener.resources.UrlMapper;
 import dev.url_shortener.dtos.UrlRequestDto;
 import dev.url_shortener.dtos.UrlResponseDto;
 import dev.url_shortener.entities.Url;
@@ -14,15 +15,17 @@ import java.net.URI;
 public class UrlController {
 
     private final UrlService urlService;
+    private final UrlMapper urlMapper;
 
-    public UrlController(UrlService urlService) {
+    public UrlController(UrlService urlService, UrlMapper urlMapper) {
         this.urlService = urlService;
+        this.urlMapper = urlMapper;
     }
 
     @PostMapping("/shorten-url")
     public ResponseEntity<UrlResponseDto> shortenUrl(@RequestBody UrlRequestDto requestDto) {
         Url url = urlService.createShortUrl(requestDto.url());
-        UrlResponseDto responseDto = new UrlResponseDto("http://localhost:8080/" + url.getShortUrl());
+        UrlResponseDto responseDto = urlMapper.toResponseDto(url);
         return ResponseEntity.ok(responseDto);
     }
 
