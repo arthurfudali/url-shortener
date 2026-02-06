@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "urls")
@@ -45,8 +46,8 @@ public class Url {
         this.id = id;
     }
 
-    public String getOriginalUrl() {
-        return originalUrl;
+    public Optional<String> getOriginalUrl() {
+        return Optional.ofNullable(originalUrl);
     }
 
     public void setOriginalUrl(String originalUrl) {

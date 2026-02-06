@@ -1,9 +1,9 @@
 package dev.url_shortener.controllers;
 
-import dev.url_shortener.resources.UrlMapper;
 import dev.url_shortener.dtos.UrlRequestDto;
 import dev.url_shortener.dtos.UrlResponseDto;
 import dev.url_shortener.entities.Url;
+import dev.url_shortener.resources.UrlMapper;
 import dev.url_shortener.services.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +31,12 @@ public class UrlController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> redirectToUrl(@PathVariable String shortUrl) {
-        try {
-            String originalUrl = urlService.getOriginalUrl(shortUrl);
-            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        var urlOptional = urlService.getOriginalUrl(shortUrl);
+
+        if (urlOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlOptional.get())).build();
         }
+        return ResponseEntity.notFound().build();
     }
 
 
